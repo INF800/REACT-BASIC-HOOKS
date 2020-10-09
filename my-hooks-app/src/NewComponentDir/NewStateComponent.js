@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import './NewStateComponent.css' // import anywher atleast once
 
 /** Note that whenever a state changes,
  * the whole component below updates */
@@ -20,16 +21,25 @@ function NewStateComponent({step=1}) {
   */
   var [curState, updateState] = useState(0) // intially `curState` is `0`
 
+  // Inline style: use js map
+  // use same css properties but w/ camelCase
+  var someStyle = {
+    color : curState >= 0 ? 'green' : 'red' 
+  }
 
   return (
     <div>
-      <h1>{curState}</h1>
-      <button onClick={ () => updateState(curState + step) }>
-        +{step}
+      <h1 style={someStyle}>{curState}</h1>
+      <button 
+        className='blackBorder green'
+        onClick={ () => updateState(curState + step) }>
+          +{step}
       </button> 
       &nbsp; 
-      <button onClick={ () => updateState(curState - step) }>
-        -{step}
+      <button 
+        className='blackBorder red'
+        onClick={ () => updateState(curState - step) }>
+          -{step}
       </button>
     </div>
   );

@@ -1,0 +1,14 @@
+/* Just a convention to name same as js file but it doesn't matter*/
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.blackBorder {
+    border: 1px solid black;
+    border-radius: 5px;
+}
