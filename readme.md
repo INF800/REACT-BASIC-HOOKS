@@ -21,3 +21,5 @@ $ npm start
 ### Props principle
 
 > *Never change the props / structs passed into components!*
+
+- To update any item in component, use **states**. Note, to update a state, whole component is updated!
