@@ -1,8 +1,11 @@
 import React from 'react';
 
-function NewComponent() {
+function NewComponent(props) {
     var num = Math.random() * 10
     var comment = ( num > 5 ? "Big" : "Small" ) + "Number"
+    if (props.comment) {
+        comment = props.comment
+    }
     return (
       <div>
         <div>

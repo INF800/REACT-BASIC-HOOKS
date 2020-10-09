@@ -7,7 +7,7 @@ import NewComponent from './NewComponentDir/NewComponent'
 function App() {
   return (
     <div>
-      <NewComponent/>
+      <NewComponent comment=" this is comment from props"/>
     </div>
   );
 }
