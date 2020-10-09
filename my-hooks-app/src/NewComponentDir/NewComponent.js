@@ -9,6 +9,10 @@ function NewComponent({comment, excitement=2}) { // advantage is default arg val
     // }
     var exclamation = "!".repeat(excitement)
 
+    const alerExclamationNum = () => {
+        alert(excitement)
+    } 
+
     return (
       <div>
         <div>
@@ -18,6 +22,7 @@ function NewComponent({comment, excitement=2}) { // advantage is default arg val
             Ranndom Number is: {num} 
             and it is a {comment} {exclamation}
         </div>
+        <button onClick={alerExclamationNum}>show exclamation number</button>
       </div>
     );
   }
