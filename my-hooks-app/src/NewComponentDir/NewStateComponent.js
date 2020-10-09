@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 /** Note that whenever a state changes,
  * the whole component below updates */
-function NewStateComponent() {
+function NewStateComponent({step=1}) {
   
   /** useState:
   *    + input: initial state (any js object)
@@ -24,12 +24,12 @@ function NewStateComponent() {
   return (
     <div>
       <h1>{curState}</h1>
-      <button onClick={ () => updateState(curState + 1) }>
-        +1
+      <button onClick={ () => updateState(curState + step) }>
+        +{step}
       </button> 
       &nbsp; 
-      <button onClick={ () => updateState(curState - 1) }>
-        -1
+      <button onClick={ () => updateState(curState - step) }>
+        -{step}
       </button>
     </div>
   );

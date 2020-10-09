@@ -22,4 +22,9 @@ $ npm start
 
 > *Never change the props / structs passed into components!*
 
-- To update any item in component, use **states**. Note, to update a state, whole component is updated!
+- To update any item in component, use **states**. Note, to update a state, whole component is updated by `useState`!
+- If the states are arrays or similar datastrutctur - They shoud be immutable.
+
+### State principle
+
+> *Minimize the information to store in state! Make it dependant on other variables like props.*
