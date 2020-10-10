@@ -27,6 +27,7 @@ $ npm start
 
 ### State principle
 
+> - *Never mutate struscts that are passed into `useState`. Create copy, then mutate, and send to update func* (see code to do it nice way)
 > - *Minimize the information to store in state! Make it dependant on other variables like props.*
 
 
@@ -44,3 +45,8 @@ $ npm run-script build
 ```
 
 **Optimized** static website is generated in `build` directory.
+
+# Upward and Downward Dataflow
+
+- Make sure struct are not mutated (**both** props and datastructures that go into `useState`)
+- Create `func` using `useState` at top most level and pass down the `func` to child components
