@@ -34,3 +34,13 @@ $ npm start
 
 - Using `className`
 - Using inline js map
+
+# Build production ready static page
+
+Get into `<name-of-your-app>` and run
+
+```
+$ npm run-script build
+```
+
+**Optimized** static website is generated in `build` directory.
