@@ -27,7 +27,7 @@ $ npm start
 
 ### State principle
 
-> *Minimize the information to store in state! Make it dependant on other variables like props.*
+> - *Minimize the information to store in state! Make it dependant on other variables like props.*
 
 
 # Styles

@@ -1,0 +1,11 @@
+.cartContainer {
+    margin: 5em 10em 5em 10em;
+    border: 1px solid black;
+    height: fit-content;
+    min-height: 150px;
+}
+
+.centerMessage {
+    text-align: center;
+    line-height: 150px;
+}
