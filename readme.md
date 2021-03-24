@@ -303,9 +303,14 @@ $ npm run-script build
 
 > - Minimize the information to store in state! Make it dependant on other variables like props.
 > - Never mutate structs that are passed into `useState` directly. **Create copy**, then mutate, and send to update func (setter). This is a clean way to do it --
+>
 >   ```js
 >   function upateQtyAtId(id, newQty) {
+>     // =================================
 >     // returns new list w/ updated items
+>     // =================================
+>
+>     // helper for clean code
 >     const editQtyWithSameId = (item) => {
 >       if (item.id === id) {
 >         return { ...item, qty: newQty };
@@ -313,6 +318,7 @@ $ npm run-script build
 >         return { ...item };
 >       }
 >     };
+>
 >     // 1. make copy: same as not mutating the state > datastructure
 >     const newData = curData.map(editQtyWithSameId);
 >     console.log(newData);
@@ -320,6 +326,7 @@ $ npm run-script build
 >     updateDataFunc(newData);
 >   }
 >   ```
+>
 > - To mutate specific object in a list, write the handler funtion (which takes key > ids as input) and calls setter method. Attach this handler to component inside > `map` function.
 >
 > - When dealing with object and want to change specific key using setter
