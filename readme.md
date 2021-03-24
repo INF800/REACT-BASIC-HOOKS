@@ -31,7 +31,7 @@ _All changes are live!_
 > - Import in `App.js` from file / dir and render > using (It is THE main function to render)
 > - For seemingly looking HTML tags, we must use > `onClick` `className` etc. instead of usual > `onclick` `class`
 > - In JSX return statements, can use `{` and `}` to > add any variables. Eg. `<h>{myHeadValue}</h>`. Note > that `myHeadValue` must always return something!!
-> - While importing, names must match exactly when not using `export default ...`
+> - While importing, names must match exactly when not using `export default ...`. Named imports i.e `import {x, y} from './file` must be spelled exactly same as it was eported.
 
 ### Basic React Syntax
 
@@ -205,7 +205,8 @@ _All changes are live!_
 
 - Inline css is stronger than the one imported from another file. It overwrites!
 - While importing, give relative path with `.css` extension. Exrension is not needed for `.js` files while importing.
-- Need double curly braces when defining `style` inline
+- Need double curly braces when defining `style` inline for a component
+- If imported `style.css` once in a file, no need to import it again in other files!
 
 ### Using `className`
 
@@ -250,6 +251,80 @@ $ npm run-script build
 
 # 👉 Hooks
 
-> Anything starting with `use` is a hook in react. Example -- useState, useRef, useEffect etc.
+> - Anything starting with `use` is a hook in react. Example -- useState, useRef, useEffect etc.
+> - Must be inside component / function body
+> - Cannot call a hook conditionally.
+>
+>   ```js
+>   // will not work
+>   function (someHook) {...}
+>   ```
+>
+>   ```js
+>   // works!
+>   function callSetterFromUseStateConditionally> () {
+>       if (...) {
+>           // setter from index 1 of `useState`
+>           setText('some value')
+>       } else {
+>           setText('some other value')
+>       }
+>   }
+>   ```
 
-- `useState` and `useEffect` are the most important ones because used mostly!
+`useState` and `useEffect` are the most important ones because used mostly!
+
+## UseState
+
+- A function that returns array of two elements after taking in initial value.
+
+  - Object
+  - Fucntion that can change the object
+
+  ```js
+  import React, { useState } from "react";
+
+  // inside component
+  const [text, setText] = useState("initial text");
+
+  // to change the text (inside component)
+  setText("new text");
+  ```
+
+- _setter_ from `useState` is asynchronous. So, it doesnot catch exact previous value if there is delay. In order to access prev value, we can send function inside _setter_ function --
+  ```js
+  // can use this way of calling setter everywhere instead of what was used above.
+  setText((prevText) => {
+    // 1. add your logic here ...
+    // 2. must always return something (the new value)
+    return newText;
+  });
+  ```
+
+> - Minimize the information to store in state! Make it dependant on other variables like props.
+> - Never mutate structs that are passed into `useState` directly. **Create copy**, then mutate, and send to update func (setter). This is a clean way to do it --
+>   ```js
+>   function upateQtyAtId(id, newQty) {
+>     // returns new list w/ updated items
+>     const editQtyWithSameId = (item) => {
+>       if (item.id === id) {
+>         return { ...item, qty: newQty };
+>       } else {
+>         return { ...item };
+>       }
+>     };
+>     // 1. make copy: same as not mutating the state > datastructure
+>     const newData = curData.map(editQtyWithSameId);
+>     console.log(newData);
+>     // 2. update using actual func
+>     updateDataFunc(newData);
+>   }
+>   ```
+> - To mutate specific object in a list, write the handler funtion (which takes key > ids as input) and calls setter method. Attach this handler to component inside > `map` function.
+>
+> - When dealing with object and want to change specific key using setter
+>   ```js
+>   // spread operator to rescue
+>   setObject(...oldObject, (keyToMutate: "new value"));
+>   ```
+>   or you can destructure your object and call use `useState` individually on them.
