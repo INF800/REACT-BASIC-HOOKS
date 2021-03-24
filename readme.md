@@ -1,4 +1,4 @@
-# 1. Initilal Setup
+# 👉 Initilal Setup
 
 Install npm and run
 
@@ -24,63 +24,210 @@ _All changes are live!_
 
 ### Basic React Rules
 
-- Place `import React from 'react';` on top of every component if using **create-react-app**
-- Write components in individual `ComponentName.js` files (can organize in folders). Component name should always start with upper case.
-- Do not forget to export Component function
-- A component function must always return something. **And it must be a single element!**
-- Import in `App.js` from file / dir and render using (It is THE main function to render)
-- For seemingly looking HTML tags, we must use `onClick` `className` etc. instead of usual `onclick` `class`
+> - Place `import React from 'react';` on top of > every component if using **create-react-app**
+> - Write components in individual `ComponentName.js` > files (can organize in folders). Component name > should always start with upper case.
+> - Do not forget to export `MyComponent` function
+> - A component function must always return > something. **And it must be a single element!**
+> - Import in `App.js` from file / dir and render > using (It is THE main function to render)
+> - For seemingly looking HTML tags, we must use > `onClick` `className` etc. instead of usual > `onclick` `class`
+> - In JSX return statements, can use `{` and `}` to > add any variables. Eg. `<h>{myHeadValue}</h>`. Note > that `myHeadValue` must always return something!!
+> - While importing, names must match exactly when not using `export default ...`
 
 ### Basic React Syntax
 
 - A react component
 
-```js
-import React from "react";
-export funtion MyComponent() {
-    return (
-        <div>
-            <h1> This is a component </h1>
-        <div/>
-    );
-}
+  ```js
+  import React from "react";
+  export funtion MyComponent() {
+      return (
+          <div>
+              <h1> This is a component </h1>
+          <div/>
+      );
+  }
 
-export MyComponent
-```
+  export default MyComponent
+  ```
 
 - Render any component in HTML element
 
-```js
-import ReactDom from "react-dom";
+  ```js
+  import ReactDom from "react-dom";
 
-function HelloComponent() {
-  return <h1>hello</h1>;
-}
+  function HelloComponent() {
+    return <h1>hello</h1>;
+  }
 
-ReactDom.render(
-  <HelloComponent />,
-  document.getElementById("your-html-tag-id-goes-here")
-);
-```
+  ReactDom.render(
+    <HelloComponent />,
+    document.getElementById("your-html-tag-id-goes-here")
+  );
+  ```
+
+- Return Large number of components using iterable list. Note that you can put logic inside `map` as well. Only condition is it must return something.
+
+  ```js
+  // Note: there must always be a `key` for repeated component.
+  const LIST_OF_COMPONENT_PROPS = [
+    { key: 101, a: 10, b: 20, c: 30 },
+    { key: 102, a: 11, b: 21, c: 31 },
+    { key: 103, a: 11, b: 21, c: 33 },
+  ];
+
+  function MyComponent() {
+    return (
+      <section>
+        {LIST_OF_COMPONENT_PROPS.map((curentElement) => {
+          return (
+            <RepeatedComponent
+              key={curentElement.id}
+              a={curentElement.a}
+              b={curentElement.b}
+              c={curentElement.c}
+            />
+          );
+        })}
+      </section>
+    );
+  }
+  ```
+
+  Another way is to use spread operator. Also note how `key` is being taken from index instead.
+
+  ```js
+  const LIST_OF_COMPONENT_PROPS = [
+    { a: 10, b: 20, c: 30 },
+    { a: 11, b: 21, c: 31 },
+    { a: 11, b: 21, c: 33 },
+  ];
+
+  function MyComponent() {
+    return (
+      <section>
+        {LIST_OF_COMPONENT_PROPS.map((curentElement, currentIdx) => {
+          return <RepeatedComponent key={currentIdx} {...curentElement} />;
+        })}
+      </section>
+    );
+  }
+  ```
+
+  - Event Listeners
+
+  ```js
+  // without taking any args
+  function MyComponent(props) {
+
+    function showAlert(){
+      alert('I was clicked.')
+    }
+
+    return (
+      <div>
+        <button type='button' onClick={showAlert}>
+        <button type='button' onClick={() => alert('This is inline!')}>
+      </div>
+    );
+  }
+  ```
+
+  ```js
+  // taking specific inputs or args on click
+  function MyComponent(props) {
+
+    function showAlert(specificObject){
+      alert(specificObject)
+    }
+
+    return (
+      <div>
+        <button type='button' onClick={() => {showAlert(props.title)}}>
+      </div>
+    );
+  }
+  ```
+
+  ```js
+  // getting the target which was cliked and other important stuff
+  // Used quite often
+  function MyComponent(props) {
+
+    function clickHandler(e){
+      // button which was clicked
+      console.log(e.target)
+      // and other useful even related stuff
+      console.log(e)
+    }
+
+    return (
+      <div>
+        <button type='button' onClick={clickHandler}>
+      </div>
+    );
+  }
+  ```
+
+---
 
 ### Props principle
 
 > _Never change the props / structs passed into components!_
 
 - To update any item in component, use **states**. Note, to update a state, whole component is updated by `useState`!
-- If the states are arrays or similar datastrutctur - They shoud be immutable.
+- If the states are arrays or similar datastrutcture - They shoud be immutable.
+- `props.children` is a special prop that stores all the values in betwenn component fragement.
+  - Eg, `props.children` stores `<p>Any content here will go into `props.children`</p>` just like it stores `10` in `props.a`
+    ```js
+    <MyComponent a={10} b={20}>
+      <p>Any content here will go into `props.children`</p>
+    </MyComponent>
+    ```
+
+> #### More rules
+>
+> - Can omit `props` in `MyComponent(..)` even if the component is taking values
+> - If we are lokking for something in `props` and it is not there, by default the value will be `""`
+> - Connvention is to use `MyComponent(props) {...}` but you can use object destructuring too `const {a, b, c} = props` or `MyComponent({a, b, c}) {...}`
+
+---
 
 ### State principle
 
 > - _Never mutate struscts that are passed into `useState`. Create copy, then mutate, and send to update func_ (see code to do it nice way)
 > - _Minimize the information to store in state! Make it dependant on other variables like props._
 
-# Styles
+---
 
-- Using `className`
-- Using inline js map
+# 👉 Styles
 
-# Build production ready static page
+## Basic Rules
+
+- Inline css is stronger than the one imported from another file. It overwrites!
+- While importing, give relative path with `.css` extension. Exrension is not needed for `.js` files while importing.
+- Need double curly braces when defining `style` inline
+
+### Using `className`
+
+```js
+import "./index.css";
+
+const MyComponent = () => {
+  return <div className="my-css-class"></div>;
+};
+```
+
+## Using inline js map
+
+```js
+const MyComponent = () => {
+  return <h4 style={{ color: "red", fontSize: "0.7rem" }}>Styled component</h4>;
+};
+```
+
+---
+
+# 👉 Build production ready static page
 
 Get into `<name-of-your-app>` and run
 
@@ -90,7 +237,19 @@ $ npm run-script build
 
 **Optimized** static website is generated in `build` directory.
 
-# Upward and Downward Dataflow
+# 👉 Upward and Downward Dataflow
 
 - Make sure struct are not mutated (**both** props and datastructures that go into `useState`)
 - Create `func` using `useState` at top most level and pass down the `func` to child components
+
+---
+
+# Advanced
+
+---
+
+# 👉 Hooks
+
+> Anything starting with `use` is a hook in react. Example -- useState, useRef, useEffect etc.
+
+- `useState` and `useEffect` are the most important ones because used mostly!
