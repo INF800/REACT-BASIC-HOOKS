@@ -256,8 +256,10 @@ $ npm run-script build
 > - Cannot call a hook conditionally.
 >
 >   ```js
->   // will not work
->   function (someHook) {...}
+>   // will not work (semantically)
+>   if (value > 0){
+>       useSomeHook(()=>{...})
+>   }
 >   ```
 >
 >   ```js
@@ -274,12 +276,12 @@ $ npm run-script build
 
 `useState` and `useEffect` are the most important ones because used mostly!
 
-## UseState
+## 🎃 UseState
 
 - A function that returns array of two elements after taking in initial value.
 
   - Object
-  - Fucntion that can change the object
+  - Fucntion that can change the object (**by re-rendering the whole componet!**)
 
   ```js
   import React, { useState } from "react";
@@ -335,3 +337,37 @@ $ npm run-script build
 >   setObject(...oldObject, (keyToMutate: "new value"));
 >   ```
 >   or you can destructure your object and call use `useState` individually on them.
+
+## 🎃 UseEfffect
+
+> _Used to do work that needs to be done outside the component (side-effects). Like fetching data, setting up event listener etc._
+
+- By **default**, `useEffect` runs after **every re-render** of the component (eg. when useState's setter is called)
+
+  - `useEffect` can access the latest value of `useState` directly
+  - Instead of re-rendering every time, can make it run on re-renders conditionally
+
+    ```js
+    // will not work! (hook inside condition)
+    if (counter > 0){
+        useEffect(()=>{...})
+    }
+    ```
+
+    ```js
+    // will work (condition inside hook)
+
+    // latest `counter` value can be directly accessed by useEffect
+    const [counter, setCounter] = useState(0);
+
+    useEffect(() => {
+      if (counter > 0) {
+        // do something on SPECIFIC re-render
+        document.title = `New message (${counter})`;
+      }
+    });
+    ```
+
+- **Second parameter:** (of `useEffect`)
+
+- **Cleanup function:**
