@@ -32,6 +32,7 @@ _All changes are live!_
 > - For seemingly looking HTML tags, we must use > `onClick` `className` etc. instead of usual > `onclick` `class`
 > - In JSX return statements, can use `{` and `}` to > add any variables. Eg. `<h>{myHeadValue}</h>`. Note > that `myHeadValue` must always return something!!
 > - While importing, names must match exactly when not using `export default ...`. Named imports i.e `import {x, y} from './file` must be spelled exactly same as it was eported.
+> - `index.js` will be main entry point for any component
 
 ### Basic React Syntax
 
@@ -350,7 +351,8 @@ $ npm run-script build
 
 ## 🎃 UseEfffect
 
-> _Used to do work that needs to be done outside the component (side-effects). Like fetching data, setting up event listener etc._
+> - _Used to do work that needs to be done outside the component (side-effects). Like fetching data, setting up event listener etc._
+> - Most of the work is done here as it is triggered by renders!
 
 - By **default**, `useEffect` runs after **every re-render** of the component (eg. when useState's setter is called)
 
@@ -427,7 +429,7 @@ $ npm run-script build
     })
     ```
 
-- `useEffect` function cannot be async await. Because it returns a function (cleanup function described below) not a promise!
+- `useEffect` function **cannot** be async await. Because it returns a function (cleanup function described below) not a promise!
 
   ```js
   // wrong!
@@ -455,3 +457,84 @@ $ npm run-script build
     return (<>{data.map(...)}</>);
   }
   ```
+
+## 🎃 Conditional Rendering
+
+```js
+function MyComponent() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [data, setData] = useState([]);
+
+  async function getMyDataAndSetLoadingToFalse() {
+    const response = await fetch(url);
+    const data = response.json();
+    setData(data);
+    setIsLoading(false); // what will happen to this setter as above setter re-renders the component? Nothing! You can write multiple setters like this.
+  }
+
+  useEffect(() => {
+    getMyDataAndSetLoadingToFalse();
+  }, []);
+
+  // flat is better than nested!
+  // ===========================
+  if (isLoading) {
+    return (
+      <>
+        <h1>Loading ....</h1>
+      </>
+    );
+  }
+
+  if (data === []) {
+    return (
+      <>
+        <h1>No users :((</h1>
+      </>
+    );
+  }
+
+  return <>data.map((singleElement) => {
+    return (<RepeatedComonent key={singleElement.id} />);
+  }
+}
+```
+
+## 🎃 Forms
+
+- **Controlled Inputs**
+- We can access events inside callbacks i.e `onChange={(e) => {e.target.value}}`
+- `e.preventDefault();` stops default behaviour of the event
+- Multiple (very large number of) inputs
+
+## 🎃 useRef
+
+- **Uncontrolled Inputs**
+- Holds **constant value** (unless changed explicitly) when component is rerendering
+- Similar to `useState` but does **not** trigger re-render
+- One of the popular use cases is -- targetting the dom element and accessing it. (Unlike traditional get element by id)
+
+  ```js
+  import React, { useRef } from "react";
+
+  const MyComponent = () => {
+    refContainer = useRef(null);
+
+    useEffect(() => {
+      // get
+      console.log(refContainer.current);
+    });
+
+    // set
+    return (
+      <>
+        <div ref={refContainer}></div>
+      </>
+    );
+  };
+  ```
+
+## 🎃 useReducer
+
+> _Deals with multiple states if there are too many to track for clean code._
