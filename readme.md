@@ -294,6 +294,7 @@ $ npm run-script build
   ```
 
 - _setter_ from `useState` is asynchronous. So, it doesnot catch exact previous value if there is delay. In order to access prev value, we can send function inside _setter_ function --
+
   ```js
   // can use this way of calling setter everywhere instead of what was used above.
   setText((prevText) => {
@@ -301,6 +302,15 @@ $ npm run-script build
     // 2. must always return something (the new value)
     return newText;
   });
+  ```
+
+- When adding as an event listener is generally good idea to wrap setter insider another funcition.
+
+  ```js
+  // inside component
+  function changeSize() {
+    setSize();
+  }
   ```
 
 > - Minimize the information to store in state! Make it dependant on other variables like props.
@@ -370,4 +380,78 @@ $ npm run-script build
 
 - **Second parameter:** (of `useEffect`)
 
-- **Cleanup function:**
+  - If given empty array, runs only for **first time** of rendering
+    ```js
+    useEffect(() => {...}, []);
+    ```
+  - If given a getter from `useState` inside `[]`, it will run if the value of getter is chabged!
+    ```js
+    const [a, setA] = useState(null)
+    useEffect(() => {...}, [a]);
+    ```
+  - Can define as many as `useEffect`s as neeeded inside component
+
+    ```js
+    function MyComponent() {
+      ...
+      useEffect(() => {...}); // runs for every re-render (by default)
+      ...
+      useEffect(() => {if (getter) { ... }}); // runs conditionally for a re-render
+      ...
+      useEffect(() => {...}, []); //runs only on first render
+      ...
+      useEffect(() => {...}, [a]); // runs only if value of a is changed i.e setA is called
+      ...
+      useEffect(() => {...}, [a, b, c]);
+      ...
+    }
+    ```
+
+- **Cleanup function:** `useEffect` can return a function that runs after the `useEffect` runs. This is called cleanup function.
+
+  - It is used to clear up things while re-rendering so that it is not created more than one if useEffect runs more than one time.
+
+    ```js
+    // inside component
+    // Note: no second arg i.e will run multiple times (as many as re-renders by default)
+    useEffect(()=>{
+      ...
+      window.addEvenetListener('resize', someCustomCallback)
+      ...
+      // cleanup function
+      return () => {
+        console.log('I am a cleanup function')
+        console.log('I remove things so that they are not created multiple times if useEffect runs multiple times!')
+        window.removeEventListener('resize', sameCustomCallbackUsedWhileAdding)
+      }
+    })
+    ```
+
+- `useEffect` function cannot be async await. Because it returns a function (cleanup function described below) not a promise!
+
+  ```js
+  // wrong!
+  useEffect(async () => { ... });
+  ```
+
+  ```js
+  // correct
+  function MyComponent() {
+    // always use setters to update
+    const [data, setData] = useState(null);
+
+    // this is async function. It calls setter.
+    const getData = async () => {
+      const response = await fetch(url);
+      const data = response.json();
+      setData(data);
+    };
+
+    // not an async function
+    useEffect(() => {
+      getData();
+    }, []); // `[]` is important as it prevents infinite loop
+
+    return (<>{data.map(...)}</>);
+  }
+  ```
